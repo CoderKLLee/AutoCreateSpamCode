@@ -13,7 +13,7 @@ NSString *PublicHeader = @"APublicHeader.h";
 //外部(delegate)调用的类
 NSString *publicCallClassName = @"ASpamCode_Public";
 //垃圾代码输出路径
-NSString *outDirectory = @"/Users/zengchunjun/workspace/SDK_Tools/SpamCode2";
+NSString *outDirectory = @"/Users/shouyou/Desktop/SpamCode";
 //NSString *outDirectory = @"/Users/zengchunjun/Desktop/123456/123456/Test";
 
 
@@ -26,6 +26,15 @@ NSString *getRandomClassName(NSString *prefixStr);//获取随机类名
 NSString *beforeClass = nil; //上一个类名
 NSString *beforeClassMethod = nil; //上一个类的方法名 前半段
 NSString *beforeClassArg = nil;//上一个类的参数 后半段方法名
+
+NSString *classNamePrefix = @"WHH"; //类名前缀
+NSString *methodNamePrefix = @"whh_"; //方法名前缀
+
+NSString *publicMethodName = @"whh_"; //方法名前缀
+
+
+int fileCount = 300; //文件个数
+
 
 
 
@@ -44,11 +53,11 @@ int main(int argc, const char * argv[]) {
         for (int i = 0; i < arguments.count; i++) {
             NSLog(@"arguments[%d]:%@",i,arguments[i]);
         }
-    
-        int count = 300;
+        
+        int count = fileCount;
         while (count > 0) {
-            NSString *className = getRandomClassName(@"WHH_");//随机字符串
-
+            NSString *className = getRandomClassName(classNamePrefix);//随机字符串
+            
             generateSpamCodeFile(outDirectory,className);
             
             count--;
@@ -57,7 +66,7 @@ int main(int argc, const char * argv[]) {
         generateSpamCodeFile(outDirectory, publicCallClassName);//生成一个唯一的类，用来外界调用
         
         
-//        runSystemCommand(@"/Users/zengchunjun/Desktop/123456/test.rb");
+        //        runSystemCommand(@"/Users/zengchunjun/Desktop/123456/test.rb");
         
     }
     return 0;
@@ -78,21 +87,24 @@ NSString * getRandomStringsWithLow(int length){
     return string;
 }
 #pragma mark:随机获取类前缀
-NSString *getClassPrefixString(){
-    
-    NSString *string = @"BAG_Class_";
-    NSArray *strings = @[@"A_A02_E",@"B_A01_F",@"C_A14_G",@"D_A13_H",@"E_A03_I",@"F_A04_J",@"G_A15_K",@"H_A05_L",@"I_A14_M",@"J_A06_N",@"K_A11_O",@"L_A15_P",@"M_A13_Q",@"N_A07_U",@"O_A12_W",@"P_A13_V",@"Q_A14_Y",@"S_A15_Z",@"T_16_S",@"Y_A17_T",@"Z_A18_A"];
-    string = strings[(int)(arc4random() % strings.count)];
-    
-    return string;
-}
+
 
 #pragma mark:随机获取方法名前缀
 NSString *getMethodPrefixString(){
     
     NSString *string = @"BAG_method_";
-    NSArray *strings = @[@"bpg_X01_",@"bag_X11_",@"bmg_X12_",@"qpg_X03_",@"fag_X05_",@"wme_X13_",@"tpy_X06_",@"uad_X15_",@"msg_X13_",@"msb_X14_",@"nsg_X18_",@"okg_X12_",@"sbg_X19_",@"snk_X15_",@"ssw_X11_",@"ac_X19_",@"ef_X20_",@"cd_X09_",@"of_X12_",@"tt_X01_",@"st_X08_"];
-    string = strings[(int)(arc4random() % strings.count)];
+    
+    char data[3];
+    
+    for (int x=0;x < 3; data[x++] = (char)('a' + (arc4random_uniform(26))));
+    
+    NSString *randomStr = [[NSString alloc] initWithBytes:data length:3 encoding:NSUTF8StringEncoding];
+    
+    for (int x=0;x < 2; data[x++] = (char)('0' + (arc4random_uniform(10))));
+    
+    NSString *randomNum = [[NSString alloc] initWithBytes:data length:2 encoding:NSUTF8StringEncoding];
+    
+    string = [NSString stringWithFormat:@"%@%@",randomStr, randomNum];
     return string;
 }
 
@@ -106,10 +118,9 @@ NSString *getRandomClassName(NSString *prefixStr)
     //获取随机字符串
     NSString *randomStr = getRandomStringsWithLow(length);
     
-    NSString *string = [NSString stringWithFormat:@"%@_%@",randomStr,getRandromString()];
+    NSString *string = [NSString stringWithFormat:@"%@%@",randomStr,getRandromString()];
     string = [[string lowercaseString] capitalizedString];//转换首字母大写
     
-//    return [getClassPrefixString() stringByAppendingString:string];
     string = [prefixStr stringByAppendingString:string];
     return string;
 }
@@ -117,13 +128,14 @@ NSString *getRandomClassName(NSString *prefixStr)
 #pragma mark:随机获取字符串
 NSString * getRandromString(){
     
-    NSString *string = @"temp";
+    int length = (arc4random() % 6) + 2;
+    char data[length];
     
-    NSArray<NSString *> *strings = @[@"parameter",@"viewController",@"apple",@"wangyi",@"view",@"tableviewController",@"tencent",@"abcd",@"game",@"flipped",@"crush",@"nostalgia",@"viewController",@"ephemeral",@"effervescence",@"evanescence",@"rendezvous",@"reminisce",@"bazinga",@"viewController",@"serendipity",@"mellifluous",@"petrichor",@"viewController",@"eudemonia",@"mother",@"passion",@"eternity",@"fantastic",@"freedom",@"tranquility",@"sweetheart",@"gorgeous",@"viewController",@"sophisticated",@"renaissance",@"viewController",@"cosmopolitan",@"bumblebee",@"umbrella",@"viewController",@"flabbergasted",@"hippopotamus",@"viewController",@"smashing",@"loquacious",@"smithereens",@"hodgepodge",@"shipshape",@"viewController",@"viewController",@"explosion",@"fuselage",@"zing",@"believe",@"Smithereens",@"final",@"Galaxy",@"Butterfly",@"Rainbow",@"Destiny"];
+    for (int x=0;x < length; data[x++] = (char)('a' + (arc4random_uniform(26))));
     
-    string = strings[(int)(arc4random() % strings.count)];
+    NSString *randomStr = [[NSString alloc] initWithBytes:data length:length encoding:NSUTF8StringEncoding];
     
-//    string = [string stringByAppendingString:[NSString stringWithFormat:@"_X%.2d_",(int)(arc4random() % 18) + 1]];
+    NSString *string = [NSString stringWithFormat:@"%@",randomStr];
     
     return string;
 }
@@ -176,8 +188,7 @@ NSSet * getMethodNamesSet(){
             methodName = @"bird_method_";
         }
         
-        methodName = [@"G9X_" stringByAppendingString:methodName];
-        methodName = [methodName stringByAppendingString:@"_A8P"];
+        methodName = [methodNamePrefix stringByAppendingString:methodName];
         
         [set addObject:methodName];
         count--;
@@ -196,9 +207,9 @@ NSSet * getMethodNamesSet(){
 static NSString *const kHClassFileTemplate = @"\
 // \n\
 // %@\n\
-// Created by apple on %@\n\
+// Created by lee on %@\n\
 // \n\
-// Copyright © %@年 apple. All rights reserved.\n\
+// Copyright © %@年 lee. All rights reserved.\n\
 //\n\n\n\
 %@\n\
 @interface %@ : NSObject \n\
@@ -207,9 +218,9 @@ static NSString *const kHClassFileTemplate = @"\
 static NSString *const kMClassFileTemplate = @"\
 // \n\
 // %@\n\
-// Created by apple on %@\n\
+// Created by lee on %@\n\
 // \n\
-// Copyright © %@年 apple. All rights reserved.\n\
+// Copyright © %@年 lee. All rights reserved.\n\
 //\n\n\n\
 #import \"%@.h\"\n\
 #import %@ \n\
@@ -265,7 +276,7 @@ void generateSpamCodeFile(NSString *outDirectory,NSString *className){
     
     NSString *classH = [className stringByAppendingString:@".h"];
     NSString *importClassH = [NSString stringWithFormat:@"#import \"%@\" \n",classH];
-   
+    
     //往对外的头文件中写入 #import "xxxxx.h"数据
     writeDataToEndOfFile(headerFilePath, importClassH);
     
@@ -284,7 +295,7 @@ void generateSpamCodeFile(NSString *outDirectory,NSString *className){
     //每个类的方法集合，对外的类只用一个方法，用来调用
     NSSet *methodSets = getMethodNamesSet();
     if ([className isEqualToString:publicCallClassName]) {
-        methodSets = [NSSet setWithObjects:@"main_X10_Call", nil];
+        methodSets = [NSSet setWithObjects:publicMethodName, nil];
         
     }
     
@@ -318,7 +329,7 @@ void generateSpamCodeFile(NSString *outDirectory,NSString *className){
                 beforeClassArg = gOutParameterName;//上个类的最后一个方法的参数名
                 
             }
- 
+            
         }
         
         //对 对外的那个类单独处理
@@ -330,12 +341,12 @@ void generateSpamCodeFile(NSString *outDirectory,NSString *className){
                 
             }
         }
-
+        
         //.m 类文件 结尾
         [mFileMethodsString appendString:@"}\n\n"];
         
         beforeMethod = methodName;//赋值上一个方法名
-
+        
         index++; //方法数递增
     }
     
